@@ -217,9 +217,29 @@ export const UnifiedLogin: React.FC<UnifiedLoginProps> = ({ config, onLoginSucce
         </form>
 
         {/* Footer */}
-        <div className="login-footer">
-          <Shield size={12} style={{ color: 'var(--primary)' }} />
-          <span>{activeAppName} System v1.0.0</span>
+        <div className="login-footer" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            type="button"
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = window.location.pathname + '?setup=true';
+            }}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--primary)',
+              fontSize: '0.75rem',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              opacity: 0.8
+            }}
+          >
+            ⚙️ Sıfırdan Kurulum Sihirbazı'nı Aç (Setup Wizard)
+          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <Shield size={12} style={{ color: 'var(--primary)' }} />
+            <span>{activeAppName} System v1.0.0</span>
+          </div>
         </div>
       </div>
     </div>

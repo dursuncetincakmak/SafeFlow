@@ -228,6 +228,12 @@ function App() {
   // Check Installation status on boot
   useEffect(() => {
     const checkInstallation = async () => {
+      // Force setup wizard if URL contains ?setup=true or ?install=true
+      if (window.location.search.includes('setup') || window.location.search.includes('install')) {
+        setIsInstalled(false);
+        return;
+      }
+
       try {
         const apiHost = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
         const response = await fetch(`${apiHost}/api/config?_cb=${Date.now()}`);
