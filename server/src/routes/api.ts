@@ -265,6 +265,12 @@ router.get('/config', (req: Request, res: Response) => {
   res.json(config);
 });
 
+router.post('/config/reset', (req: Request, res: Response) => {
+  const resetConfig = { ...getStoredConfig(), isInstalled: false };
+  saveStoredConfig(resetConfig);
+  res.json({ success: true, message: 'Sistem sıfırlandı.' });
+});
+
 router.post('/config', async (req: Request, res: Response) => {
   const { appName, logoUrl, logoHeight, themeMode, primaryColor, secondaryColor, dbType, dbConnectionString, departments, trainingVideos } = req.body;
 

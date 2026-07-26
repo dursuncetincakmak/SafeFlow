@@ -220,8 +220,12 @@ export const UnifiedLogin: React.FC<UnifiedLoginProps> = ({ config, onLoginSucce
         <div className="login-footer" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
           <button
             type="button"
-            onClick={() => {
+            onClick={async () => {
               localStorage.clear();
+              try {
+                const apiHost = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+                await fetch(`${apiHost}/api/config/reset`, { method: 'POST' });
+              } catch (e) {}
               window.location.href = window.location.pathname + '?setup=true';
             }}
             style={{
