@@ -1,0 +1,104 @@
+{
+  "visitors": [
+    {
+      "firstName": "Sedat",
+      "lastName": "Arslan",
+      "phone": "5438770260",
+      "email": "sedat.arslan@onebt.com.tr",
+      "company": "One Bilgisayar",
+      "hostName": "Çetin Çakmak",
+      "department": "Bilgi İşlem",
+      "visitPurpose": "Keşif",
+      "plannedDate": "2026-07-20",
+      "plannedTime": "14:20",
+      "requiredDocs": [
+        "ISG",
+        "SGK",
+        "ID_COPY"
+      ],
+      "trainingId": "",
+      "id": "VIS-4435",
+      "status": "PENDING_DOCS",
+      "uploadedDocs": [],
+      "trainingWatched": false,
+      "quizCompleted": false,
+      "createdAt": "2026-07-14T19:58:48.510Z"
+    }
+  ],
+  "logs": [],
+  "contractors": [
+    {
+      "id": "TAS-289",
+      "name": "Vega Insaat A.S.",
+      "contactName": "Selim Vega",
+      "contactEmail": "selim@vegainssat.com",
+      "username": "selim45",
+      "password": "DLT5YGVT",
+      "status": "APPROVED",
+      "requiredDocs": [
+        "Vergi Levhası",
+        "İSG Taahhütnamesi"
+      ],
+      "uploadedDocs": [
+        {
+          "type": "Vergi Levhası",
+          "name": "vergi_levhasi_2025.pdf",
+          "status": "APPROVED",
+          "fileUrl": "data:application/pdf;base64,JVBERi0xLjQKJd...",
+          "uploadedAt": "2026-07-06T20:20:26.579Z"
+        }
+      ],
+      "createdAt": "2026-07-06T20:20:26.549Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "USR-4940",
+      "firstName": "Çetin",
+      "lastName": "Çakmak",
+      "email": "dursuncetin.cakmak@modernkarton.com.tr",
+      "username": "dursuncetincakmak",
+      "password": "Modernkarton.2025",
+      "role": "department",
+      "department": "İdari İşler",
+      "isActive": true,
+      "createdAt": "2026-07-14T19:55:32.791Z"
+    },
+    {
+      "id": "USR-5960",
+      "firstName": "Mutlu",
+      "lastName": "Kaya",
+      "email": "mutlu.kaya@modernkarton.com",
+      "username": "mutlu.kaya",
+      "password": "Modernkarton.2025",
+      "role": "isg",
+      "department": "İSG",
+      "isActive": true,
+      "createdAt": "2026-07-14T20:21:16.969Z"
+    },
+    {
+      "id": "USR-8843",
+      "firstName": "Ferhat",
+      "lastName": "Karaosmanoğlu",
+      "email": "ferhat.karaosmanoglu@cetingroup.com.tr",
+      "username": "guv.ferhat",
+      "password": "Modernkarton.2025",
+      "role": "security",
+      "department": "İdari İşler",
+      "isActive": true,
+      "createdAt": "2026-07-14T20:23:31.791Z"
+    },
+    {
+      "id": "USR-9467",
+      "firstName": "Selçuk",
+      "lastName": "İpekten",
+      "email": "selcuk.ipekten@modernkarton.com.tr",
+      "username": "selcuk.ipekten",
+      "password": "Modernkarton.2025",
+      "role": "super_admin",
+      "department": "Bilgi İşlem",
+      "isActive": true,
+      "createdAt": "2026-07-14T20:39:27.650Z"
+    }
+  ]
+}
