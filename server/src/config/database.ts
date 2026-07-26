@@ -80,6 +80,7 @@ export interface TenantConfig {
   trainingVideos: TrainingVideo[];
   companies?: CompanyTenant[];
   smtpConfig?: SmtpConfig;
+  smsConfig?: SmsConfig;
   isInstalled?: boolean;
 }
 
