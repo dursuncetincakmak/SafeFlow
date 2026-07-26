@@ -229,7 +229,8 @@ function App() {
   useEffect(() => {
     const checkInstallation = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/config?_cb=' + Date.now());
+        const apiHost = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+        const response = await fetch(`${apiHost}/api/config?_cb=${Date.now()}`);
         if (response.ok) {
           const config = await response.json();
           if (config.isInstalled === false) {
@@ -240,12 +241,10 @@ function App() {
             applyTheme(config);
           }
         } else {
-          // Installation check returned non-200 status
-          setIsInstalled(true);
+          setIsInstalled(false);
         }
       } catch (err) {
-        // Installation check request failed
-        setIsInstalled(true); // Fallback to local storage mode if backend is not running or during offline builds
+        setIsInstalled(false);
       }
     };
     checkInstallation();
