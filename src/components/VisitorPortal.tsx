@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Visitor, TrainingVideo, DocumentType, TenantConfig } from '../utils/types';
+import { getApiRoot } from '../utils/apiConfig';
 
 import { QRCodeSVG } from 'qrcode.react';
 import { User, Phone, Play, CheckCircle2, AlertTriangle, Upload, X, ShieldAlert, Award, FileCheck, XCircle } from 'lucide-react';
@@ -51,7 +52,7 @@ export const VisitorPortal: React.FC<VisitorPortalProps> = ({
     const token = urlParams.get('token') || window.location.pathname.split('/invite/')[1];
     if (token) {
       // Decode or match visitor
-      fetch(`http://localhost:5000/api/visitors/invite/${token}`)
+      fetch(`${getApiRoot()}/visitors/invite/${token}`)
         .then(res => res.json())
         .then(data => {
           if (data.success && data.visitor) {

@@ -3,6 +3,7 @@ import type { Visitor, SecurityLog } from '../utils/types';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { Shield, Camera, AlertCircle, CheckCircle, XCircle, History, LogIn, LogOut, RefreshCw } from 'lucide-react';
 import { useLanguage, getLocale } from '../utils/LanguageContext';
+import { getApiRoot } from '../utils/apiConfig';
 
 interface SecurityPortalProps {
   visitors: Visitor[];
@@ -33,7 +34,7 @@ export const SecurityPortal: React.FC<SecurityPortalProps> = ({
   // Fetch all permits to check worker permits in real-time
   const fetchPermits = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/work-permits');
+      const res = await fetch(`${getApiRoot()}/work-permits`);
       if (res.ok) {
         const data = await res.json();
         setPermits(data);

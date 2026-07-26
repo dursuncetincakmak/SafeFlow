@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Visitor, TrainingVideo, DocumentType, VisitorStatus, TenantConfig } from '../utils/types';
 import { UserPlus, Users, ClipboardCheck, Search, Calendar, FileText, CheckCircle2, Clock, XCircle, LogIn, X } from 'lucide-react';
+import { getApiRoot } from '../utils/apiConfig';
 
 interface DepartmentDashboardProps {
   visitors: Visitor[];
@@ -77,7 +78,7 @@ export const DepartmentDashboard: React.FC<DepartmentDashboardProps> = ({
 
     try {
       // Call backend invitation service
-      const res = await fetch('http://localhost:5000/api/visitors/invite', {
+      const res = await fetch(`${getApiRoot()}/visitors/invite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -165,7 +166,7 @@ export const DepartmentDashboard: React.FC<DepartmentDashboardProps> = ({
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/contractors/register', {
+      const res = await fetch(`${getApiRoot()}/contractors/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { TenantConfig, TrainingVideo } from '../utils/types';
 import { Film, Plus, Trash2, CheckCircle2, Save, ClipboardCheck, XCircle, ChevronDown, ChevronUp, Calendar, AlertTriangle, RefreshCw, BarChart3, Shield } from 'lucide-react';
 import { useLanguage, getLocale } from '../utils/LanguageContext';
+import { getApiRoot } from '../utils/apiConfig';
 
 interface OHSSpecialistDashboardProps {
   config: TenantConfig;
@@ -64,7 +65,7 @@ export const OHSSpecialistDashboard: React.FC<OHSSpecialistDashboardProps> = ({
   const fetchPermits = async () => {
     setLoadingPermits(true);
     try {
-      const res = await fetch('http://localhost:5000/api/work-permits');
+      const res = await fetch(`${getApiRoot()}/work-permits`);
       if (res.ok) {
         const data = await res.json();
         setPermits(data);
@@ -84,7 +85,7 @@ export const OHSSpecialistDashboard: React.FC<OHSSpecialistDashboardProps> = ({
 
   const handleApprovePermit = async (permitId: string) => {
     try {
-      const res = await fetch('http://localhost:5000/api/work-permits/update-status', {
+      const res = await fetch(`${getApiRoot()}/work-permits/update-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ permitId, status: 'APPROVED' })
@@ -104,7 +105,7 @@ export const OHSSpecialistDashboard: React.FC<OHSSpecialistDashboardProps> = ({
       return;
     }
     try {
-      const res = await fetch('http://localhost:5000/api/work-permits/update-status', {
+      const res = await fetch(`${getApiRoot()}/work-permits/update-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ permitId, status: 'REJECTED', rejectReason: permitRejectReason })

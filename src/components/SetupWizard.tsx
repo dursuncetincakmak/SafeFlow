@@ -164,6 +164,8 @@ const TRANSLATIONS = {
   }
 };
 
+import { getApiRoot } from '../utils/apiConfig';
+
 interface SetupWizardProps {
   onInstallComplete: (config: any) => void;
 }
@@ -172,7 +174,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onInstallComplete }) =
   const [step, setStep] = useState(1);
   const [lang, setLang] = useState<'tr' | 'en' | 'es'>('tr');
   const t = TRANSLATIONS[lang];
-  const API_ROOT = 'http://localhost:5000/api';
+  const API_ROOT = getApiRoot();
 
   // State: Wizard Fields
   const [appName, setAppName] = useState('SafeFlow');

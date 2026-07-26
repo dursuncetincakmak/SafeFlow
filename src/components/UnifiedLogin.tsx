@@ -3,6 +3,7 @@ import { Shield, KeyRound, User, AlertTriangle, ArrowRight, Eye, EyeOff } from '
 import { SafeFlowLogo } from './SafeFlowLogo';
 import type { TenantConfig } from '../utils/types';
 import { useLanguage } from '../utils/LanguageContext';
+import { getApiRoot } from '../utils/apiConfig';
 
 interface UnifiedLoginProps {
   config: TenantConfig;
@@ -89,7 +90,7 @@ export const UnifiedLogin: React.FC<UnifiedLoginProps> = ({ config, onLoginSucce
     setError(null);
 
     try {
-      const apiRoot = config.dbConnectionString?.startsWith('http') ? config.dbConnectionString : 'http://localhost:5000/api';
+      const apiRoot = (config.dbConnectionString?.startsWith('http://') || config.dbConnectionString?.startsWith('https://')) ? config.dbConnectionString : getApiRoot();
 
       const response = await fetch(`${apiRoot}/auth/login`, {
         method: 'POST',

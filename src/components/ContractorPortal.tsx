@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { ContractorCompany, TenantConfig, Visitor } from '../utils/types';
 import { Upload, CheckCircle2, AlertTriangle, FileText, Check, Users, Plus, Calendar, ShieldAlert, RefreshCw } from 'lucide-react';
 import { useLanguage, getLocale } from '../utils/LanguageContext';
+import { getApiRoot } from '../utils/apiConfig';
 
 interface ContractorPortalProps {
   config: TenantConfig;
@@ -55,7 +56,7 @@ export const ContractorPortal: React.FC<ContractorPortalProps> = ({ config, acti
     if (!activeCompany) return;
     setLoadingEmployees(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/contractors/employees/${activeCompany.id}`);
+      const res = await fetch(`${getApiRoot()}/contractors/employees/${activeCompany.id}`);
       if (res.ok) {
         const data = await res.json();
         setEmployees(data);
@@ -72,7 +73,7 @@ export const ContractorPortal: React.FC<ContractorPortalProps> = ({ config, acti
     if (!activeCompany) return;
     setLoadingPermits(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/work-permits/company/${activeCompany.id}`);
+      const res = await fetch(`${getApiRoot()}/work-permits/company/${activeCompany.id}`);
       if (res.ok) {
         const data = await res.json();
         setPermits(data);
@@ -110,7 +111,7 @@ export const ContractorPortal: React.FC<ContractorPortalProps> = ({ config, acti
       const fileUrl = reader.result as string;
 
       try {
-        const res = await fetch('http://localhost:5000/api/contractors/upload-doc', {
+        const res = await fetch(`${getApiRoot()}/contractors/upload-doc`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -147,7 +148,7 @@ export const ContractorPortal: React.FC<ContractorPortalProps> = ({ config, acti
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/contractors/add-employee', {
+      const res = await fetch(`${getApiRoot()}/contractors/add-employee`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -188,7 +189,7 @@ export const ContractorPortal: React.FC<ContractorPortalProps> = ({ config, acti
       const fileUrl = reader.result as string;
 
       try {
-        const res = await fetch('http://localhost:5000/api/contractors/employee-upload-doc', {
+        const res = await fetch(`${getApiRoot()}/contractors/employee-upload-doc`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -225,7 +226,7 @@ export const ContractorPortal: React.FC<ContractorPortalProps> = ({ config, acti
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/work-permits/create', {
+      const res = await fetch(`${getApiRoot()}/work-permits/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Visitor, UploadedDocument, DocumentType, TenantConfig } from '../utils/types';
 import { Landmark, FileText, Check, X, ShieldCheck, Eye, Building, AlertTriangle } from 'lucide-react';
 import { useLanguage, getLocale } from '../utils/LanguageContext';
+import { getApiRoot } from '../utils/apiConfig';
 
 interface AdminDashboardProps {
   visitors: Visitor[];
@@ -49,7 +50,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const fetchContractors = async () => {
     setLoadingContractors(true);
     try {
-      const res = await fetch('http://localhost:5000/api/contractors');
+      const res = await fetch(`${getApiRoot()}/contractors`);
       if (res.ok) {
         const data = await res.json();
         setContractors(data);
@@ -72,7 +73,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const handleApproveContractor = async (companyId: string) => {
     try {
-      const res = await fetch('http://localhost:5000/api/contractors/update-status', {
+      const res = await fetch(`${getApiRoot()}/contractors/update-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ companyId, status: 'APPROVED' })
@@ -92,7 +93,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return;
     }
     try {
-      const res = await fetch('http://localhost:5000/api/contractors/update-status', {
+      const res = await fetch(`${getApiRoot()}/contractors/update-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ companyId, status: 'REJECTED', rejectReason: contractorRejectReason })
@@ -111,7 +112,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // Subcontractor Individual Doc approvals
   const handleApproveContractorDoc = async (companyId: string, docType: string) => {
     try {
-      const res = await fetch('http://localhost:5000/api/contractors/update-status', {
+      const res = await fetch(`${getApiRoot()}/contractors/update-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -133,7 +134,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const handleRejectContractorDoc = async (companyId: string, docType: string, reason: string) => {
     try {
-      const res = await fetch('http://localhost:5000/api/contractors/update-status', {
+      const res = await fetch(`${getApiRoot()}/contractors/update-status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

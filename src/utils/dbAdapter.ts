@@ -1,5 +1,6 @@
 import type { Visitor, SecurityLog, DatabaseType } from './types';
 import { INITIAL_VISITORS, INITIAL_SECURITY_LOGS } from './mockData';
+import { getApiRoot } from './apiConfig';
 
 // Common adapter interface for database operations
 export interface IDatabaseAdapter {
@@ -11,11 +12,11 @@ export interface IDatabaseAdapter {
 
 // Helper to determine active backend API URL
 function getApiEndpoint(connectionString: string): string {
-  // If the user inputs a URL, use it, otherwise target the local backend port
+  // If the user inputs a URL, use it, otherwise target the active backend port
   if (connectionString && (connectionString.startsWith('http://') || connectionString.startsWith('https://'))) {
     return connectionString;
   }
-  return 'http://localhost:5000/api';
+  return getApiRoot();
 }
 
 // 1. Browser LocalStorage Adapter (standalone client-side demo fallback)

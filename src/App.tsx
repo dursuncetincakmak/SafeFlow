@@ -14,6 +14,7 @@ import { SetupWizard } from './components/SetupWizard';
 import { Shield, RefreshCw } from 'lucide-react';
 import { i18n } from './utils/i18n';
 import { useLanguage, getLocale } from './utils/LanguageContext';
+import { getApiRoot } from './utils/apiConfig';
 
 type AppRole = 'department' | 'admin' | 'visitor' | 'security' | 'super_admin' | 'contractor' | 'isg';
 
@@ -235,8 +236,7 @@ function App() {
       }
 
       try {
-        const apiHost = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
-        const response = await fetch(`${apiHost}/api/config?_cb=${Date.now()}`);
+        const response = await fetch(`${getApiRoot()}/config?_cb=${Date.now()}`);
         if (response.ok) {
           const config = await response.json();
           if (config.isInstalled === false) {
@@ -425,7 +425,7 @@ function App() {
   // Update System Settings (SaaS Customization)
   const handleSaveTenantConfig = async (newConfig: TenantConfig) => {
     try {
-      const response = await fetch('http://localhost:5000/api/config', {
+      const response = await fetch(`${getApiRoot()}/config`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
