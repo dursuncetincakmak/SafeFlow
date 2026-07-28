@@ -1,5 +1,5 @@
 import * as ldap from 'ldapjs';
-import { dbGetUsers } from '../config/database';
+import { dbGetUsers, getStoredConfig } from '../config/database';
 
 export interface LDAPUser {
   username: string;
@@ -227,7 +227,29 @@ export async function authenticateActiveDirectory(
     console.error('[Auth Service] Error checking dynamic DB users:', err);
   }
 
-  // 3. Fallback local accounts if no tenant custom auth is active or as developer backdoor
+  // 3. Check Setup Wizard Admin User created during installation
+  try {
+    const config = getStoredConfig();
+    if (config && config.adminUser && config.adminUser.username) {
+      if (
+        config.adminUser.username.toLowerCase() === username.toLowerCase() &&
+        config.adminUser.password === password
+      ) {
+        console.log(`[Auth Service] Authenticated via Setup Wizard Admin user: ${username}`);
+        return {
+          username: config.adminUser.username,
+          displayName: `${config.adminUser.firstName || ''} ${config.adminUser.lastName || ''}`.trim() || username,
+          email: config.adminUser.email || `${username}@sirket.com`,
+          role: 'super_admin',
+          department: 'Yönetim'
+        };
+      }
+    }
+  } catch (err: any) {
+    console.error('[Auth Service] Error checking setup admin user:', err.message);
+  }
+
+  // 4. Fallback local accounts if no tenant custom auth is active or as developer backdoor
   const localAccount = FALLBACK_ACCOUNTS[username.toLowerCase()];
   if (localAccount && localAccount.pass === password) {
     console.log(`[Auth Service] Authenticated via fallback local profiles: ${username}`);

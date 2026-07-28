@@ -82,6 +82,13 @@ export interface TenantConfig {
   smtpConfig?: SmtpConfig;
   smsConfig?: SmsConfig;
   isInstalled?: boolean;
+  adminUser?: {
+    firstName?: string;
+    lastName?: string;
+    username: string;
+    password: string;
+    email?: string;
+  };
 }
 
 export interface UploadedDocument {
