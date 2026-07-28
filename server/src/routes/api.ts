@@ -24,6 +24,7 @@ import { authenticateActiveDirectory } from '../services/ldapService';
 import { sendEmail, sendSMS } from '../services/notificationService';
 import { knex } from 'knex';
 import { MongoClient } from 'mongodb';
+import bcrypt from 'bcryptjs';
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'vpass-super-secret-key-987';
@@ -269,6 +270,135 @@ router.post('/config/reset', (req: Request, res: Response) => {
   const resetConfig = { ...getStoredConfig(), isInstalled: false };
   saveStoredConfig(resetConfig);
   res.json({ success: true, message: 'Sistem sıfırlandı.' });
+});
+
+// Test Database Connection for Setup Wizard
+router.post('/config/test-db', async (req: Request, res: Response) => {
+  const { dbType, dbConnectionString } = req.body;
+
+  if (!dbType) {
+    res.status(400).json({ success: false, message: 'Veritabanı türü zorunludur.' });
+    return;
+  }
+
+  if (dbType === 'local_storage') {
+    res.json({ success: true, message: 'Yerel dosya veritabanı testi başarılı.' });
+    return;
+  }
+
+  if (!dbConnectionString) {
+    res.status(400).json({ success: false, message: 'Bağlantı dizesi zorunludur.' });
+    return;
+  }
+
+  try {
+    if (['postgresql', 'mysql', 'mssql'].includes(dbType)) {
+      let client = '';
+      if (dbType === 'postgresql') client = 'pg';
+      else if (dbType === 'mysql') client = 'mysql2';
+      else if (dbType === 'mssql') client = 'mssql';
+
+      const testConn = knex({
+        client,
+        connection: dbConnectionString,
+        acquireConnectionTimeout: 5000,
+        pool: { min: 1, max: 2 },
+        useNullAsDefault: true
+      });
+
+      await testConn.raw('SELECT 1+1 AS result');
+      await testConn.destroy();
+      res.json({ success: true, message: 'Veritabanı bağlantısı başarılı.' });
+      return;
+    }
+
+    if (dbType === 'mongodb') {
+      const client = new MongoClient(dbConnectionString, { serverSelectionTimeoutMS: 5000 });
+      await client.connect();
+      await client.close();
+      res.json({ success: true, message: 'MongoDB veritabanı bağlantısı başarılı.' });
+      return;
+    }
+
+    res.status(400).json({ success: false, message: 'Desteklenmeyen veritabanı türü.' });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: `Bağlantı hatası: ${err.message}` });
+  }
+});
+
+// Setup Wizard Installation API
+router.post('/install', async (req: Request, res: Response) => {
+  const {
+    appName,
+    systemCompanyCode,
+    logoUrl,
+    logoHeight,
+    themeMode,
+    primaryColor,
+    secondaryColor,
+    dbType,
+    dbConnectionString,
+    adminUser
+  } = req.body;
+
+  if (!appName || !systemCompanyCode || !dbType) {
+    res.status(400).json({ error: 'Zorunlu kurulum parametreleri eksik.' });
+    return;
+  }
+
+  try {
+    const newConfig = {
+      appName,
+      systemCompanyCode: systemCompanyCode.toUpperCase(),
+      logoUrl: logoUrl || '/logo.png',
+      logoHeight: logoHeight ? Number(logoHeight) : 40,
+      themeMode: themeMode || 'light',
+      primaryColor: primaryColor || '#00d2ff',
+      secondaryColor: secondaryColor || '#0066ff',
+      dbType,
+      dbConnectionString: dbConnectionString || '',
+      departments: ["Yazılım Geliştirme", "Ar-Ge", "Pazarlama", "İSG Departmanı"],
+      trainingVideos: [
+        {
+          id: "VID-01",
+          title: "Genel Tesis Giriş ve İSG Kuralları",
+          duration: "1:30",
+          videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+          description: "Tesis genelinde uyulması zorunlu İSG kuralları.",
+          questions: [
+            {
+              id: "Q1",
+              question: "Tesis sınırları içerisinde hangi koruyucu ekipmanların giyilmesi zorunludur?",
+              options: [
+                "Sadece baret ve gözlük",
+                "Baret, çelik burunlu iş ayakkabısı ve reflektörlü yelek",
+                "Herhangi bir ekipman zorunluluğu yoktur",
+                "Sivil kıyafet yeterlidir"
+              ],
+              correctAnswer: 1
+            }
+          ]
+        }
+      ],
+      companies: [],
+      isInstalled: true
+    };
+
+    // 1. Save config file
+    saveStoredConfig(newConfig as any);
+
+    // 2. Initialize database connection pools & SQL migrations
+    const dbInit = await initDatabase();
+
+    res.json({
+      success: true,
+      message: 'Sistem kurulumu başarıyla tamamlandı.',
+      dbStatus: dbInit
+    });
+  } catch (err: any) {
+    console.error("Install route error:", err);
+    res.status(500).json({ error: `Kurulum sırasında hata oluştu: ${err.message}` });
+  }
 });
 
 router.post('/config', async (req: Request, res: Response) => {
