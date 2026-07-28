@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { TenantConfig, DatabaseType, SmtpConfig, SystemUser, CompanyTenant } from '../utils/types';
 import { Settings, Palette, Database, Upload, CheckCircle2, Shield, Trash2, Plus, Users, Mail, Eye, EyeOff, RefreshCw, Activity, UserPlus, Send, Building2 } from 'lucide-react';
 import { i18n } from '../utils/i18n';
+import { getApiRoot } from '../utils/apiConfig';
 
 interface SuperAdminDashboardProps {
   config: TenantConfig;
@@ -169,7 +170,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
   const loadUsers = async () => {
     setUsersLoading(true);
     try {
-      const apiRoot = config.dbConnectionString?.startsWith('http') ? config.dbConnectionString : 'http://localhost:5000/api';
+      const apiRoot = (config.dbConnectionString?.startsWith('http://') || config.dbConnectionString?.startsWith('https://')) ? config.dbConnectionString : getApiRoot();
       const res = await fetch(`${apiRoot}/users`);
       if (res.ok) {
         const data = await res.json();
@@ -189,7 +190,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
     }
 
     try {
-      const apiRoot = config.dbConnectionString?.startsWith('http') ? config.dbConnectionString : 'http://localhost:5000/api';
+      const apiRoot = (config.dbConnectionString?.startsWith('http://') || config.dbConnectionString?.startsWith('https://')) ? config.dbConnectionString : getApiRoot();
       const res = await fetch(`${apiRoot}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -215,7 +216,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
     if (!window.confirm(`"${displayName}" kullanıcısını silmek istediğinize emin misiniz?`)) return;
 
     try {
-      const apiRoot = config.dbConnectionString?.startsWith('http') ? config.dbConnectionString : 'http://localhost:5000/api';
+      const apiRoot = (config.dbConnectionString?.startsWith('http://') || config.dbConnectionString?.startsWith('https://')) ? config.dbConnectionString : getApiRoot();
       const res = await fetch(`${apiRoot}/users/${userId}`, { method: 'DELETE' });
       if (res.ok) {
         loadUsers();
@@ -277,7 +278,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
     setTestingConnection(true);
     setTestResult(null);
 
-    const apiRoot = dbConnectionString.startsWith('http') ? dbConnectionString : 'http://localhost:5000/api';
+    const apiRoot = (dbConnectionString.startsWith('http://') || dbConnectionString.startsWith('https://')) ? dbConnectionString : getApiRoot();
     
     fetch(`${apiRoot}/config/test-db`, {
       method: 'POST',
@@ -306,7 +307,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
     setSmtpTestResult(null);
 
     try {
-      const apiRoot = config.dbConnectionString?.startsWith('http') ? config.dbConnectionString : 'http://localhost:5000/api';
+      const apiRoot = (config.dbConnectionString?.startsWith('http://') || config.dbConnectionString?.startsWith('https://')) ? config.dbConnectionString : getApiRoot();
       const res = await fetch(`${apiRoot}/mail/test`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -323,7 +324,11 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
       });
 
       const data = await res.json();
-      setSmtpTestResult({ success: data.success, message: data.message });
+      if (res.ok && data.success) {
+        setSmtpTestResult({ success: true, message: 'Test e-postası başarıyla gönderildi.' });
+      } else {
+        setSmtpTestResult({ success: false, message: data.error || 'SMTP testi başarısız.' });
+      }
     } catch (err: any) {
       setSmtpTestResult({ success: false, message: `Bağlantı hatası: ${err.message}` });
     } finally {
