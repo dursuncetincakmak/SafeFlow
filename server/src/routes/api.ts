@@ -381,7 +381,14 @@ router.post('/install', async (req: Request, res: Response) => {
         }
       ],
       companies: [],
-      isInstalled: true
+      isInstalled: true,
+      adminUser: adminUser ? {
+        firstName: adminUser.firstName,
+        lastName: adminUser.lastName,
+        username: adminUser.username,
+        password: adminUser.password,
+        email: adminUser.email
+      } : undefined
     };
 
     // 1. Save config file

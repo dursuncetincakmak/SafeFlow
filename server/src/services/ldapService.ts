@@ -60,6 +60,16 @@ const FALLBACK_ACCOUNTS: Record<string, { pass: string; user: LDAPUser }> = {
       role: 'super_admin',
       department: 'IT Yönetim'
     }
+  },
+  'cetin.cakmak': {
+    pass: 'Admin12345!',
+    user: {
+      username: 'cetin.cakmak',
+      displayName: 'Çetin Çakmak (Sistem Yöneticisi)',
+      email: 'cetin.cakmak@karton.com',
+      role: 'super_admin',
+      department: 'IT Yönetim'
+    }
   }
 };
 
